@@ -41,8 +41,8 @@ The header line must be the 18 field names, listed in the order below, separated
 
 There are up to 33 fields in each row.
 
-|FieldName|Datatype|Activity types|Required?|Description|
-|---|---|---|---|
+| FieldName | Datatype | Activity types | Required? | Description |
+| --- | --- | --- | --- | --- |
 | **LocationIdentifier** | string | All | Y | The AQTS location identifier for the measurement.|
 | **MeasurementId** | string | Discharge | N | An optional measurement ID for a discharge value. Measurement IDs must be unique per location.|
 | **MeasurementStartDateTime** | DateTimeOffset | All | Y | The start time of the measurement. See the [Timestamps](#timestamps) section below for format details. |
