@@ -4,6 +4,10 @@
 
 An AQTS field data plugin supporting stage discharge measurements and/or parameter readings.
 
+## Supported CSV format
+
+The format of the CSV files supported by this plugin is described [here](src/StageDischargeReadingsPlugin)
+
 ## Requirements
 
 - Requires Visual Studio 2017 (Community Edition is fine)
