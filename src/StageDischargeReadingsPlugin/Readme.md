@@ -3,10 +3,6 @@
 The StageDischarge field data plugin is a customer-installable plugin for AQTS 2017.4+.
 It parses CSV files and imports stage/discharge activities, and parameter readings.
 
-## Installation
-
-Use the [FieldDataPluginTool](https://github.com/AquaticInformatics/examples/tree/master/TimeSeries/PublicApis/FieldDataPlugins/FieldDataPluginTool) to install the `StageDischarge.plugin` file on your AQTS app server.
-
 ## CSV File format
 
 The CSV file format supported by the plugin allows for flexible combinations of field data to be imported.
@@ -148,38 +144,3 @@ LocationB,,2017-05-01T03:00:00.0000000+04:00,2017-05-01T04:00:00.0000000+04:00,8
 LocationB,852345,2017-05-01T05:00:00.0000000+04:00,2017-05-01T06:00:00.0000000+04:00,9.4,9.4,ft,13.6,ft^3/s,Main,,ft,,ft^2,,ft/s
 LocationA,46792,2016-04-02T03:00:00.0000000Z,2016-04-02T04:00:00.0000000Z,11.85,12.7,ft,132.3,ft^3/s,Main,23.4,ft,125.63,ft^2,85.2,ft/s,Doug,My oh my what a comment
 ```
-
-## Building the plugin from source
-
-You don't need to build the plugin yourself. You can simply download the `StageDischarge.plugin` file from the Releases page.
-
-However, if you want to make changes or contributions, you will require a few free software development tools:
-- Requires Visual Studio 2017 (Community Edition is fine)
-- .NET 4.7 runtime
-- Powershell 5+ [download it here](https://www.microsoft.com/en-us/download/details.aspx?id=54616) or install [via Chocolatey](https://chocolatey.org/packages/PowerShell): `choco install PowerShell`
-
-## Building the plugin
-
-- Load the `src\StageDischarge.sln` file in Visual Studio and build the `Release` configuration.
-- The `deploy\Release\StageDischarge.plugin` file can then be installed on your AQTS app server.
-
-## Testing the plugin within Visual Studio
-
-Use the included `src\AqtsBinaries\Tester\PluginTester.exe` to test your plugin logic on the sample files.
-
-1. Open the EhsnPlugin project's **Properties** page
-2. Select the **Debug** tab
-3. Select **Start external program:** as the start action and browse to `src\AqtsBinaries\Tester\PluginTester.exe`
-4. Enter the **Command line arguments:** to launch your plugin
-
-```
-/Plugin=StageDischarge.dll /Json=AppendedResults.json /Data=..\..\..\..\data\sample.csv
-```
-
-The `/Plugin=` argument can be the filename of your plugin assembly, without any folder. The default working directory for a start action is the bin folder containing your plugin.
-
-5. Set a breakpoint in the plugin's `ParseFile()` methods.
-6. Select your plugin project in Solution Explorer and select **"Debug | Start new instance"**
-7. Now you're debugging your plugin!
-
-See the [PluginTester](https://github.com/AquaticInformatics/Examples/tree/master/TimeSeries/PublicApis/FieldDataPlugins/PluginTester) documentation for more details.
