@@ -23,7 +23,7 @@ build:
   project: src\StageDischargeReadingsPlugin.sln
 
 artifacts:
-  - path: src\StageDischargeReadingsPlugin\deploy\Release\StageDischargeReadings.plugin
+  - path: src\StageDischargeReadingsPlugin\deploy\Release\StageDischargeReadingsPlugin.plugin
     name: ThePlugin
     type: file
 

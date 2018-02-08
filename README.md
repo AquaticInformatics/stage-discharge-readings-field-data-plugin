@@ -1,5 +1,7 @@
 # stage-discharge-readings-field-data-plugin
 
+[![Build status](https://ci.appveyor.com/api/projects/status/kd35cx68832yqldy/branch/master?svg=true)](https://ci.appveyor.com/project/SystemsAdministrator/stage-discharge-readings-field-data-plugin/branch/master)
+
 An AQTS field data plugin supporting stage discharge measurements and/or parameter readings.
 
 ## Requirements
