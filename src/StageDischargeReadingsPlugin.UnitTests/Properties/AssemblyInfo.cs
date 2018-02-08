@@ -1,6 +1,6 @@
 using System.Reflection;
 
-[assembly: AssemblyTitle("Server.Plugins.FieldVisit.StageDischarge.UnitTests")]
+[assembly: AssemblyTitle("StageDischargeReadingsPlugin.UnitTests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyTrademark("")]
