@@ -4,11 +4,16 @@
 
 An AQTS field data plugin supporting stage discharge measurements and/or parameter readings.
 
+## Want to install this plugin?
+
+- Download the latest release of the plugin [here](../../releases/latest)
+- Install it using the [FieldVisitPluginTool](https://github.com/AquaticInformatics/aquarius-field-data-framework/tree/master/src/FieldDataPluginTool)
+
 ## Supported CSV format
 
 The format of the CSV files supported by this plugin is described [here](src/StageDischargeReadingsPlugin)
 
-## Requirements
+## Requirements for building the plugin from source
 
 - Requires Visual Studio 2017 (Community Edition is fine)
 - .NET 4.7 runtime
