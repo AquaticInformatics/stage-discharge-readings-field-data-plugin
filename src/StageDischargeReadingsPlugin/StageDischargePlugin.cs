@@ -6,7 +6,6 @@ using FieldDataPluginFramework;
 using FieldDataPluginFramework.Context;
 using FieldDataPluginFramework.DataModel;
 using FieldDataPluginFramework.DataModel.DischargeActivities;
-using FieldDataPluginFramework.DataModel.Readings;
 using FieldDataPluginFramework.Results;
 using StageDischargeReadingsPlugin.Interfaces;
 using StageDischargeReadingsPlugin.Mappers;
@@ -21,6 +20,7 @@ namespace StageDischargeReadingsPlugin
         private readonly IDataParser<StageDischargeRecord> _parser;
         private IFieldDataResultsAppender _fieldDataResultsAppender;
         private readonly DischargeActivityMapper _dischargeActivityMapper;
+        private ILog _log;
 
         public StageDischargePlugin() : this(new CsvDataParser<StageDischargeRecord>())
         {}
@@ -34,6 +34,8 @@ namespace StageDischargeReadingsPlugin
         public ParseFileResult ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender, ILog logger)
         {
             _fieldDataResultsAppender = fieldDataResultsAppender;
+            _log = logger;
+
             try
             {
                 var parsedRecords = _parser.ParseInputData(fileStream);
@@ -52,13 +54,13 @@ namespace StageDischargeReadingsPlugin
                     return ParseFileResult.CannotParse();
                 }
 
-                logger.Info($"Parsed {_parser.ValidRecords} from input file.");
+                _log.Info($"Parsed {_parser.ValidRecords} rows from input file.");
                 SaveRecords(parsedRecords);
                 return ParseFileResult.SuccessfullyParsedAndDataValid();
             }
             catch (Exception e)
             {
-                logger.Error($"Failed to parse file; {e.Message}");
+                _log.Error($"Failed to parse file; {e.Message}\n{e.StackTrace}");
                 return ParseFileResult.CannotParse(e);
             }
         }
@@ -76,23 +78,37 @@ namespace StageDischargeReadingsPlugin
             }
         }
 
+        private List<FieldVisitInfo> CreatedVisits { get; set; }
+        private Dictionary<string,FieldVisitInfo> VisitsByMeasurementId { get; set; }
+
         private void CreateVisitsAndActivities(LocationInfo location, IEnumerable<StageDischargeRecord> locationRecords)
         {
-            var createdVisits = new List<FieldVisitInfo>();
+            CreatedVisits = new List<FieldVisitInfo>();
+            VisitsByMeasurementId = new Dictionary<string, FieldVisitInfo>(StringComparer.InvariantCultureIgnoreCase);
 
             foreach (var stageDischargeRecord in locationRecords)
             {
-                var fieldVisit = MergeOrCreateVisit(createdVisits, location, stageDischargeRecord);
+                var fieldVisit = MergeOrCreateVisit(location, stageDischargeRecord);
 
                 CreateDischargeActivityForVisit(fieldVisit, stageDischargeRecord);
                 CreateReadingsForVisit(fieldVisit, stageDischargeRecord);
             }
+
+            var midnightVisits = CreatedVisits
+                .Where(fv => fv.StartDate.Date < fv.EndDate.Date)
+                .ToList();
+
+            _log.Info($"{location.LocationIdentifier} created {CreatedVisits.Count} visits.");
+
+            if (midnightVisits.Any())
+            {
+                _log.Info($"{location.LocationIdentifier} had {midnightVisits.Count} visits spanning midnight: {string.Join(", ", midnightVisits.Select(fv => $"Start={fv.StartDate} End={fv.EndDate}"))}");
+            }
         }
 
-        private FieldVisitInfo MergeOrCreateVisit(List<FieldVisitInfo> createdVisits, LocationInfo location, StageDischargeRecord visitRecord)
+        private FieldVisitInfo MergeOrCreateVisit(LocationInfo location, StageDischargeRecord visitRecord)
         {
-            var existingVisit = createdVisits
-                .SingleOrDefault(fv => fv.StartDate.Date == visitRecord.MeasurementStartDateTime.Date);
+            var existingVisit = FindExistingVisit(visitRecord);
 
             if (existingVisit != null)
             {
@@ -112,12 +128,71 @@ namespace StageDischargeReadingsPlugin
 
             var fieldVisitInfo = _fieldDataResultsAppender.AddFieldVisit(location, fieldVisitDetails);
 
-            createdVisits.Add(fieldVisitInfo);
+            CreatedVisits.Add(fieldVisitInfo);
+
+            if (IsValidMeasurementId(visitRecord.MeasurementId))
+            {
+                AddVisitByMeasurementId(fieldVisitInfo, visitRecord);
+            }
 
             return fieldVisitInfo;
         }
 
-        private static void MergeWithExistingVisit(FieldVisitInfo existingVisit, StageDischargeRecord visitRecord)
+        private static bool IsValidMeasurementId(string measurementId)
+        {
+            return !string.IsNullOrWhiteSpace(measurementId)
+                   && measurementId.Trim() != "0"; // 0 is a commonly used, but bad, measurement ID from 3.X
+        }
+
+        private FieldVisitInfo FindExistingVisit(StageDischargeRecord visitRecord)
+        {
+            if (VisitsByMeasurementId.TryGetValue(visitRecord.MeasurementId.Trim(), out var otherVisit))
+            {
+                if (otherVisit.StartDate.Date == visitRecord.MeasurementStartDateTime.Date
+                    || otherVisit.EndDate.Date == visitRecord.MeasurementEndDateTime.Date)
+                {
+                    // We can match up visits by measurement ID
+                    _log.Info($"Found associated measurementId={visitRecord.MeasurementId} at Start={otherVisit.StartDate} and End={otherVisit.EndDate}");
+                    return otherVisit;
+                }
+            }
+
+            var containingVisits = CreatedVisits
+                .Where(fv => fv.StartDate <= visitRecord.MeasurementStartDateTime
+                             && fv.EndDate >= visitRecord.MeasurementEndDateTime)
+                .ToList();
+
+            if (containingVisits.Count == 1)
+            {
+                // The record fits completely within exactly one existing visit
+                var visit = containingVisits.Single();
+                _log.Info($"Merging existing {visit.LocationInfo.LocationIdentifier} visit.Start={visit.StartDate} visit.End={visit.EndDate} with completely contained record.Start={visitRecord.MeasurementStartDateTime} record.End={visitRecord.MeasurementEndDateTime}");
+                return visit;
+            }
+
+            var possibleVisits = CreatedVisits
+                .Where(fv => fv.StartDate.Date == visitRecord.MeasurementStartDateTime.Date
+                             || fv.EndDate.Date == visitRecord.MeasurementEndDateTime.Date)
+                .ToList();
+
+            if (possibleVisits.Count == 1)
+            {
+                // An exact match with on existing visit on the same day as the record
+                var visit = possibleVisits.Single();
+                _log.Info($"Merging existing {visit.LocationInfo.LocationIdentifier} visit.Start={visit.StartDate} visit.End={visit.EndDate} with same day record.Start={visitRecord.MeasurementStartDateTime} record.End={visitRecord.MeasurementEndDateTime}");
+                return visit;
+            }
+
+            if (possibleVisits.Count == 0)
+                return null;
+
+            var error = $"Confused merge of record.Start={visitRecord.MeasurementStartDateTime} record.End={visitRecord.MeasurementEndDateTime} with {possibleVisits.Count} possible visits: {string.Join(", ", possibleVisits.Select(fv => $"Start={fv.StartDate} End={fv.EndDate}"))}";
+
+            _log.Error(error);
+            throw new Exception(error);
+        }
+
+        private void MergeWithExistingVisit(FieldVisitInfo existingVisit, StageDischargeRecord visitRecord)
         {
             existingVisit.FieldVisitDetails.FieldVisitPeriod = ExpandInterval(
                 existingVisit.FieldVisitDetails.FieldVisitPeriod,
@@ -129,6 +204,42 @@ namespace StageDischargeReadingsPlugin
 
             existingVisit.FieldVisitDetails.Party =
                 MergeUniqueParties(existingVisit.FieldVisitDetails.Party, visitRecord.Party);
+
+            var visitDuration = existingVisit.FieldVisitDetails.FieldVisitPeriod.End -
+                                existingVisit.FieldVisitDetails.FieldVisitPeriod.Start;
+
+            if (visitDuration.TotalHours > 36)
+            {
+                // Log a warning, but keep going
+                _log.Error($"{existingVisit.LocationInfo.LocationIdentifier} visit Start={existingVisit.FieldVisitDetails.FieldVisitPeriod.Start} End={existingVisit.FieldVisitDetails.FieldVisitPeriod.End} exceeds 36 hours TotalHours={visitDuration.TotalHours:F1}");
+            }
+
+            if (!IsValidMeasurementId(visitRecord.MeasurementId))
+                return;
+
+            AddVisitByMeasurementId(existingVisit, visitRecord);
+        }
+
+        private void AddVisitByMeasurementId(FieldVisitInfo fieldVisitInfo, StageDischargeRecord visitRecord)
+        {
+            var measurementId = visitRecord.MeasurementId.Trim();
+
+            if (VisitsByMeasurementId.ContainsKey(measurementId))
+            {
+                var associatedVisit = VisitsByMeasurementId[measurementId];
+
+                if (associatedVisit != fieldVisitInfo)
+                {
+                    _log.Error($"MeasurementId={measurementId} is already associated with a different {associatedVisit.LocationInfo.LocationIdentifier} visit Start={associatedVisit.StartDate} End={associatedVisit.EndDate}. Can't switch to a different {fieldVisitInfo.LocationInfo.LocationIdentifier} visit Start={fieldVisitInfo.StartDate} End={fieldVisitInfo.EndDate}");
+
+                    // Re-associate it, but the import is likely going to fail anyway.
+                    VisitsByMeasurementId[measurementId] = fieldVisitInfo;
+                }
+
+                return;
+            }
+
+            VisitsByMeasurementId.Add(measurementId, fieldVisitInfo);
         }
 
         private static string MergeUniqueComments(params string[] values)
@@ -173,36 +284,10 @@ namespace StageDischargeReadingsPlugin
 
         private void CreateReadingsForVisit(FieldVisitInfo fieldVisit, StageDischargeRecord record)
         {
-            var readingTime = GetHumanReadableMidpoint(
-                new DateTimeInterval(record.MeasurementStartDateTime, record.MeasurementEndDateTime));
-
             foreach (var reading in record.Readings)
             {
-                var parameterReading = new Reading(reading.Parameter, new Measurement(reading.Value, reading.Units))
-                {
-                    Comments = record.Comments,
-                    DateTimeOffset = readingTime
-                };
-
-                _fieldDataResultsAppender.AddReading(fieldVisit, parameterReading);
+                _fieldDataResultsAppender.AddReading(fieldVisit, reading);
             }
-        }
-
-        private DateTimeOffset GetHumanReadableMidpoint(DateTimeInterval interval)
-        {
-            var duration = interval.End - interval.Start;
-            var midpoint = interval.Start + TimeSpan.FromTicks(duration.Ticks / 2);
-
-            var truncatedTime = new DateTimeOffset(
-                midpoint.Year,
-                midpoint.Month,
-                midpoint.Day,
-                midpoint.Hour,
-                midpoint.Minute,
-                0,
-                midpoint.Offset);
-
-            return truncatedTime < interval.Start ? interval.Start : truncatedTime;
         }
 
         public ParseFileResult ParseFile(Stream fileStream, LocationInfo selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,

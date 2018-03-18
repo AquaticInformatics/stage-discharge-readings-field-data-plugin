@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FieldDataPluginFramework.DataModel;
+using FieldDataPluginFramework.DataModel.Readings;
 using FieldDataPluginFramework.Validation;
 using FileHelpers;
 using StageDischargeReadingsPlugin.Helpers;
@@ -11,10 +13,10 @@ namespace StageDischargeReadingsPlugin.Parsers
     [DelimitedRecord(CsvParserConstants.FieldDelimiter)]
     public class StageDischargeRecord : ISelfValidator
     {
-        [FieldOrder(1), FieldTrim(TrimMode.Both)]
+        [FieldOrder(1), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
         public string LocationIdentifier;
 
-        [FieldOrder(2), FieldTrim(TrimMode.Both)]
+        [FieldOrder(2), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
         public string MeasurementId;
 
         [FieldOrder(3), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldConverter(typeof(CsvDateTimeOffsetConverter))]
@@ -29,34 +31,34 @@ namespace StageDischargeReadingsPlugin.Parsers
         [FieldOrder(6), FieldTrim(TrimMode.Both)]
         public double? StageAtEnd;
 
-        [FieldOrder(7), FieldTrim(TrimMode.Both)]
+        [FieldOrder(7), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
         public string StageUnits;
 
         [FieldOrder(8), FieldTrim(TrimMode.Both)]
         public double? Discharge;
 
-        [FieldOrder(9), FieldTrim(TrimMode.Both)]
+        [FieldOrder(9), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
         public string DischargeUnits;
 
-        [FieldOrder(10), FieldTrim(TrimMode.Both), FieldOptional]
+        [FieldOrder(10), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string ChannelName;
 
         [FieldOrder(11), FieldTrim(TrimMode.Both), FieldOptional]
         public double? ChannelWidth;
         
-        [FieldOrder(12), FieldTrim(TrimMode.Both), FieldOptional]
+        [FieldOrder(12), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string WidthUnits;
 
         [FieldOrder(13), FieldTrim(TrimMode.Both), FieldOptional]
         public double? ChannelArea;
 
-        [FieldOrder(14), FieldTrim(TrimMode.Both), FieldOptional]
+        [FieldOrder(14), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string AreaUnits;
 
         [FieldOrder(15), FieldTrim(TrimMode.Both), FieldOptional]
         public double? ChannelVelocity;
 
-        [FieldOrder(16), FieldTrim(TrimMode.Both), FieldOptional]
+        [FieldOrder(16), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string VelocityUnits;
 
         [FieldOrder(17), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
@@ -66,46 +68,28 @@ namespace StageDischargeReadingsPlugin.Parsers
         public string Comments;
 
         [FieldOrder(19), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
-        public string Reading1Parameter;
+        public string ReadingParameter;
         [FieldOrder(20), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
-        public string Reading1Units;
+        public string ReadingUnits;
         [FieldOrder(21), FieldTrim(TrimMode.Both), FieldOptional]
-        public double? Reading1Value;
+        public double? ReadingValue;
 
-        [FieldOrder(22), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
-        public string Reading2Parameter;
+        [FieldOrder(22), FieldTrim(TrimMode.Both), FieldOptional]
+        public ReadingType? ReadingType;
         [FieldOrder(23), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
-        public string Reading2Units;
-        [FieldOrder(24), FieldTrim(TrimMode.Both), FieldOptional]
-        public double? Reading2Value;
-
-        [FieldOrder(25), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
-        public string Reading3Parameter;
+        public string ReadingPublish;
+        [FieldOrder(24), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
+        public string ReadingMethod;
+        [FieldOrder(25), FieldTrim(TrimMode.Both), FieldOptional]
+        public double? ReadingUncertainty;
         [FieldOrder(26), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
-        public string Reading3Units;
-        [FieldOrder(27), FieldTrim(TrimMode.Both), FieldOptional]
-        public double? Reading3Value;
-
+        public string ReadingDeviceManufacturer;
+        [FieldOrder(27), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
+        public string ReadingDeviceModel;
         [FieldOrder(28), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
-        public string Reading4Parameter;
+        public string ReadingDeviceSerialNumber;
         [FieldOrder(29), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
-        public string Reading4Units;
-        [FieldOrder(30), FieldTrim(TrimMode.Both), FieldOptional]
-        public double? Reading4Value;
-
-        [FieldOrder(31), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
-        public string Reading5Parameter;
-        [FieldOrder(32), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
-        public string Reading5Units;
-        [FieldOrder(33), FieldTrim(TrimMode.Both), FieldOptional]
-        public double? Reading5Value;
-
-        public class Reading
-        {
-            public string Parameter { get; set; }
-            public string Units { get; set; }
-            public double Value { get; set; }
-        }
+        public string ReadingSublocation;
 
         [FieldHidden]
         public List<Reading> Readings = new List<Reading>();
@@ -123,7 +107,7 @@ namespace StageDischargeReadingsPlugin.Parsers
                 ValidateEmptyDischarge();
             }
 
-            ValidateAllReadings();
+            ValidateReading();
 
             ThrowIfNoDischargeOrReadings();
 
@@ -132,35 +116,109 @@ namespace StageDischargeReadingsPlugin.Parsers
                                       nameof(MeasurementEndDateTime), MeasurementEndDateTime);
         }
 
-        private void ValidateAllReadings()
+        private void ValidateReading()
         {
-            AddValidReading(1, Reading1Parameter, Reading1Units, Reading1Value);
-            AddValidReading(2, Reading2Parameter, Reading2Units, Reading2Value);
-            AddValidReading(3, Reading3Parameter, Reading3Units, Reading3Value);
-            AddValidReading(4, Reading4Parameter, Reading4Units, Reading4Value);
-            AddValidReading(5, Reading5Parameter, Reading5Units, Reading5Value);
-        }
-
-        private void AddValidReading(int number, string parameter, string units, double? value)
-        {
-            if (!string.IsNullOrEmpty(parameter) && !string.IsNullOrEmpty(units) && value.HasValue)
+            if (!string.IsNullOrEmpty(ReadingParameter) && !string.IsNullOrEmpty(ReadingUnits) && ReadingValue.HasValue)
             {
-                Readings.Add(new Reading
+                var readingTime = GetHumanReadableMidpoint(new DateTimeInterval(MeasurementStartDateTime, MeasurementEndDateTime));
+
+                var readingPublish = ParseNullableBoolean(ReadingPublish);
+
+                var reading = new Reading(ReadingParameter, new Measurement(ReadingValue.Value, ReadingUnits))
                 {
-                    Parameter = parameter,
-                    Units = units,
-                    Value = value.Value
-                });
+                    Comments = Comments,
+                    DateTimeOffset = readingTime,
+                    ReadingType = ReadingType ?? FieldDataPluginFramework.DataModel.Readings.ReadingType.Unknown,
+                    Uncertainty = ReadingUncertainty,
+                    SubLocation = ReadingSublocation
+                };
+
+                if (!string.IsNullOrEmpty(ReadingMethod))
+                    reading.Method = ReadingMethod;
+
+                if (readingPublish.HasValue)
+                    reading.Publish = readingPublish.Value;
+
+                if (!string.IsNullOrEmpty(ReadingDeviceManufacturer) && !string.IsNullOrEmpty(ReadingDeviceModel) &&
+                    !string.IsNullOrEmpty(ReadingDeviceSerialNumber))
+                {
+                    reading.MeasurementDevice = new MeasurementDevice(ReadingDeviceManufacturer, ReadingDeviceModel, ReadingDeviceSerialNumber);
+                }
+                else
+                {
+                    ThrowIfNotNullOrEmpty(nameof(ReadingDeviceManufacturer), ReadingDeviceManufacturer, "Device");
+                    ThrowIfNotNullOrEmpty(nameof(ReadingDeviceModel), ReadingDeviceModel, "Device");
+                    ThrowIfNotNullOrEmpty(nameof(ReadingDeviceSerialNumber), ReadingDeviceSerialNumber, "Device");
+                }
+
+                Readings.Add(reading);
 
                 return;
             }
 
-            var readingKey = $"Reading{number}";
+            var readingKey = nameof(ReadingValue);
 
-            ThrowIfNotNull($"Reading{number}Value", value, readingKey);
-            ThrowIfNotNullOrEmpty($"Reading{number}Parameter", parameter, readingKey);
-            ThrowIfNotNullOrEmpty($"Reading{number}Units", units, readingKey);
+            ThrowIfNotNull(nameof(ReadingValue), ReadingValue, readingKey);
+            ThrowIfNotNullOrEmpty(nameof(ReadingParameter), ReadingParameter, readingKey);
+            ThrowIfNotNullOrEmpty(nameof(ReadingUnits), ReadingUnits, readingKey);
+            ThrowIfNotNull(nameof(ReadingType), ReadingType, readingKey);
+            ThrowIfNotNull(nameof(ReadingUncertainty), ReadingUncertainty, readingKey);
+            ThrowIfNotNullOrEmpty(nameof(ReadingMethod), ReadingMethod, readingKey);
+            ThrowIfNotNullOrEmpty(nameof(ReadingDeviceManufacturer), ReadingDeviceManufacturer, readingKey);
+            ThrowIfNotNullOrEmpty(nameof(ReadingDeviceModel), ReadingDeviceModel, readingKey);
+            ThrowIfNotNullOrEmpty(nameof(ReadingDeviceSerialNumber), ReadingDeviceSerialNumber, readingKey);
+            ThrowIfNotNullOrEmpty(nameof(ReadingSublocation), ReadingSublocation, readingKey);
         }
+
+        private static DateTimeOffset GetHumanReadableMidpoint(DateTimeInterval interval)
+        {
+            var duration = interval.End - interval.Start;
+            var midpoint = interval.Start + TimeSpan.FromTicks(duration.Ticks / 2);
+
+            var truncatedTime = new DateTimeOffset(
+                midpoint.Year,
+                midpoint.Month,
+                midpoint.Day,
+                midpoint.Hour,
+                midpoint.Minute,
+                0,
+                midpoint.Offset);
+
+            return truncatedTime < interval.Start ? interval.Start : truncatedTime;
+        }
+
+        private bool? ParseNullableBoolean(string from)
+        {
+            if (bool.TryParse(from, out var value))
+                return value;
+
+            if (TrueValues.Contains(from))
+                return true;
+
+            if (FalseValues.Contains(from))
+                return false;
+
+            return null;
+        }
+
+        private static readonly HashSet<string> TrueValues =
+            new HashSet<string>(StringComparer.InvariantCultureIgnoreCase)
+            {
+                "y",
+                "yes",
+                "1",
+                "true"
+            };
+
+        private static readonly HashSet<string> FalseValues =
+            new HashSet<string>(StringComparer.InvariantCultureIgnoreCase)
+            {
+                "n",
+                "no",
+                "0",
+                "false"
+            };
+
 
         private void ValidateDischargeValues()
         {
@@ -188,7 +246,7 @@ namespace StageDischargeReadingsPlugin.Parsers
             ThrowIfNotNullOrEmpty(nameof(VelocityUnits), VelocityUnits);
         }
 
-        private void ThrowIfNotNull(string propertyName, double? value, string keyName = nameof(Discharge))
+        private void ThrowIfNotNull<T>(string propertyName, T? value, string keyName = nameof(Discharge)) where T : struct
         {
             if (!value.HasValue) return;
 
