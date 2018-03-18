@@ -8,7 +8,6 @@ using FieldDataPluginFramework.Context;
 using FieldDataPluginFramework.DataModel;
 using FieldDataPluginFramework.DataModel.DischargeActivities;
 using FieldDataPluginFramework.Results;
-using FileHelpers;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;

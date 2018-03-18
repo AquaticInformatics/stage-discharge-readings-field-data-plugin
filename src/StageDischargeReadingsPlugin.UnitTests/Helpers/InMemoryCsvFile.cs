@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using FileHelpers;
 using StageDischargeReadingsPlugin.Interfaces;
 
@@ -24,7 +25,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
         public MemoryStream GetInMemoryCsvFileStream()
         {
             MemoryStream theMemStream = new MemoryStream();
-            TextWriter writer = new StreamWriter(theMemStream);
+            TextWriter writer = new StreamWriter(theMemStream, Encoding.UTF8, 512, true);
             var engine = new FileHelperAsyncEngine<TRecordType>();
             engine.HeaderText = engine.GetFileHeader();
             engine.BeginWriteStream(writer);
