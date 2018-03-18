@@ -31,9 +31,9 @@ namespace StageDischargeReadingsPlugin.Helpers
 
         public override object StringToField(string from)
         {
-            DateTimeOffset dateTimeOffset;
-            if (DateTimeOffset.TryParseExact(from, _supportedDateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTimeOffset))
+            if (DateTimeOffset.TryParseExact(from, _supportedDateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeOffset))
                 return dateTimeOffset;
+
             throw new ConvertException(from, typeof(DateTimeOffset), 
                 FormattableString.Invariant($"{from} is not in the expected DateTime format: {string.Join(" or ", _supportedDateFormats)}"));
         }
