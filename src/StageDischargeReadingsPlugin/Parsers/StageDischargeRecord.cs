@@ -130,7 +130,7 @@ namespace StageDischargeReadingsPlugin.Parsers
                     DateTimeOffset = readingTime,
                     ReadingType = ReadingType ?? FieldDataPluginFramework.DataModel.Readings.ReadingType.Unknown,
                     Uncertainty = ReadingUncertainty,
-                    SubLocation = ReadingSublocation
+                    SubLocation = string.IsNullOrEmpty(ReadingSublocation) ? null : ReadingSublocation
                 };
 
                 if (!string.IsNullOrEmpty(ReadingMethod))
