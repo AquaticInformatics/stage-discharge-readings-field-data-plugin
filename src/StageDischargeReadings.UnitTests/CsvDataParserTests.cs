@@ -3,10 +3,10 @@ using System.IO;
 using System.Text;
 using FluentAssertions;
 using NUnit.Framework;
-using Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers;
-using StageDischargeReadingsPlugin.Parsers;
+using StageDischargeReadings.Parsers;
+using StageDischargeReadings.UnitTests.Helpers;
 
-namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
+namespace StageDischargeReadings.UnitTests
 {
     [TestFixture]
     public class CsvDataParserTests

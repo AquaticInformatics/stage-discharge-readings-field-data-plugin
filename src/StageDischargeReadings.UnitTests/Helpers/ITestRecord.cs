@@ -1,6 +1,6 @@
-﻿using StageDischargeReadingsPlugin.Interfaces;
+﻿using StageDischargeReadings.Interfaces;
 
-namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
+namespace StageDischargeReadings.UnitTests.Helpers
 {
     public interface ITestRecord<out TRecord> where TRecord : ISelfValidator
     {

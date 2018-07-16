@@ -2,9 +2,9 @@
 using FileHelpers;
 using FluentAssertions;
 using NUnit.Framework;
-using StageDischargeReadingsPlugin.Helpers;
+using StageDischargeReadings.Helpers;
 
-namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
+namespace StageDischargeReadings.UnitTests
 {
     [TestFixture]
     class CsvDateTimeOffsetConverterTests

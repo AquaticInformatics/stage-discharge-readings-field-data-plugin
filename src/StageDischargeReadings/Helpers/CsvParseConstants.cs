@@ -1,4 +1,4 @@
-﻿namespace StageDischargeReadingsPlugin.Helpers
+﻿namespace StageDischargeReadings.Helpers
 {
     public class CsvParserConstants
     {

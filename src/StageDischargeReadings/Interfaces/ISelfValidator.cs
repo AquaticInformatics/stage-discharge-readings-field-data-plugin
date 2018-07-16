@@ -1,4 +1,4 @@
-﻿namespace StageDischargeReadingsPlugin.Interfaces
+﻿namespace StageDischargeReadings.Interfaces
 {
     public interface ISelfValidator
     {

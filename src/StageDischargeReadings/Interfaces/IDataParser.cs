@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace StageDischargeReadingsPlugin.Interfaces
+namespace StageDischargeReadings.Interfaces
 {
     public interface IDataParser<TRecord> where TRecord : class, ISelfValidator
     {

@@ -7,25 +7,25 @@ using FieldDataPluginFramework.Context;
 using FieldDataPluginFramework.DataModel;
 using FieldDataPluginFramework.DataModel.DischargeActivities;
 using FieldDataPluginFramework.Results;
-using StageDischargeReadingsPlugin.Interfaces;
-using StageDischargeReadingsPlugin.Mappers;
-using StageDischargeReadingsPlugin.Parsers;
+using StageDischargeReadings.Interfaces;
+using StageDischargeReadings.Mappers;
+using StageDischargeReadings.Parsers;
 
-namespace StageDischargeReadingsPlugin
+namespace StageDischargeReadings
 {
-    public class StageDischargePlugin : IFieldDataPlugin
+    public class StageDischargeReadingsPlugin : IFieldDataPlugin
     {
         public const string NoRecordsInInputFile = "No records found in input file.";
         public const string InputFileContainsInvalidRecords = "Input file contains invalid records.";
-        private readonly IDataParser<StageDischargeRecord> _parser;
+        private readonly IDataParser<StageDischargeReadingRecord> _parser;
         private IFieldDataResultsAppender _fieldDataResultsAppender;
         private readonly DischargeActivityMapper _dischargeActivityMapper;
         private ILog _log;
 
-        public StageDischargePlugin() : this(new CsvDataParser<StageDischargeRecord>())
+        public StageDischargeReadingsPlugin() : this(new CsvDataParser<StageDischargeReadingRecord>())
         {}
 
-        public StageDischargePlugin(IDataParser<StageDischargeRecord> parser)
+        public StageDischargeReadingsPlugin(IDataParser<StageDischargeReadingRecord> parser)
         {
             _parser = parser;
             _dischargeActivityMapper = new DischargeActivityMapper();
@@ -65,7 +65,7 @@ namespace StageDischargeReadingsPlugin
             }
         }
 
-        private void SaveRecords(IEnumerable<StageDischargeRecord> parsedRecords)
+        private void SaveRecords(IEnumerable<StageDischargeReadingRecord> parsedRecords)
         {
             var sortedRecordsByLocation = parsedRecords
                 .GroupBy(r => r.LocationIdentifier)
@@ -81,7 +81,7 @@ namespace StageDischargeReadingsPlugin
         private List<FieldVisitInfo> CreatedVisits { get; set; }
         private Dictionary<string,FieldVisitInfo> VisitsByMeasurementId { get; set; }
 
-        private void CreateVisitsAndActivities(LocationInfo location, IEnumerable<StageDischargeRecord> locationRecords)
+        private void CreateVisitsAndActivities(LocationInfo location, IEnumerable<StageDischargeReadingRecord> locationRecords)
         {
             CreatedVisits = new List<FieldVisitInfo>();
             VisitsByMeasurementId = new Dictionary<string, FieldVisitInfo>(StringComparer.InvariantCultureIgnoreCase);
@@ -106,7 +106,7 @@ namespace StageDischargeReadingsPlugin
             }
         }
 
-        private FieldVisitInfo MergeOrCreateVisit(LocationInfo location, StageDischargeRecord visitRecord)
+        private FieldVisitInfo MergeOrCreateVisit(LocationInfo location, StageDischargeReadingRecord visitRecord)
         {
             var existingVisit = FindExistingVisit(visitRecord);
 
@@ -144,7 +144,7 @@ namespace StageDischargeReadingsPlugin
                    && measurementId.Trim() != "0"; // 0 is a commonly used, but bad, measurement ID from 3.X
         }
 
-        private FieldVisitInfo FindExistingVisit(StageDischargeRecord visitRecord)
+        private FieldVisitInfo FindExistingVisit(StageDischargeReadingRecord visitRecord)
         {
             if (VisitsByMeasurementId.TryGetValue(visitRecord.MeasurementId.Trim(), out var otherVisit))
             {
@@ -192,7 +192,7 @@ namespace StageDischargeReadingsPlugin
             throw new Exception(error);
         }
 
-        private void MergeWithExistingVisit(FieldVisitInfo existingVisit, StageDischargeRecord visitRecord)
+        private void MergeWithExistingVisit(FieldVisitInfo existingVisit, StageDischargeReadingRecord visitRecord)
         {
             existingVisit.FieldVisitDetails.FieldVisitPeriod = ExpandInterval(
                 existingVisit.FieldVisitDetails.FieldVisitPeriod,
@@ -220,7 +220,7 @@ namespace StageDischargeReadingsPlugin
             AddVisitByMeasurementId(existingVisit, visitRecord);
         }
 
-        private void AddVisitByMeasurementId(FieldVisitInfo fieldVisitInfo, StageDischargeRecord visitRecord)
+        private void AddVisitByMeasurementId(FieldVisitInfo fieldVisitInfo, StageDischargeReadingRecord visitRecord)
         {
             var measurementId = visitRecord.MeasurementId.Trim();
 
@@ -270,19 +270,19 @@ namespace StageDischargeReadingsPlugin
             return new DateTimeInterval(minStart, maxEnd);
         }
 
-        private void CreateDischargeActivityForVisit(FieldVisitInfo fieldVisit, StageDischargeRecord record)
+        private void CreateDischargeActivityForVisit(FieldVisitInfo fieldVisit, StageDischargeReadingRecord record)
         {
             if (!record.Discharge.HasValue) return;
 
             _fieldDataResultsAppender.AddDischargeActivity(fieldVisit, CreateDischargeActivityFromRecord(record));
         }
 
-        private DischargeActivity CreateDischargeActivityFromRecord(StageDischargeRecord record)
+        private DischargeActivity CreateDischargeActivityFromRecord(StageDischargeReadingRecord record)
         {
             return _dischargeActivityMapper.FromStageDischargeRecord(record);
         }
 
-        private void CreateReadingsForVisit(FieldVisitInfo fieldVisit, StageDischargeRecord record)
+        private void CreateReadingsForVisit(FieldVisitInfo fieldVisit, StageDischargeReadingRecord record)
         {
             foreach (var reading in record.Readings)
             {

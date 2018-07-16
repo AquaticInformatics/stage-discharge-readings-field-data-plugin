@@ -1,21 +1,21 @@
 ﻿using System;
 using System.IO;
 using Ploeh.AutoFixture;
-using Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers;
-using StageDischargeReadingsPlugin.Parsers;
+using StageDischargeReadings.Parsers;
+using StageDischargeReadings.UnitTests.Helpers;
 
-namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.TestData
+namespace StageDischargeReadings.UnitTests.TestData
 {
     public class StageDischargeCsvFileBuilder
     {
         public static MemoryStream CreateCsvFile(IFixture fixture)
         {
-            InMemoryCsvFile<StageDischargeRecord> csvFile = new InMemoryCsvFile<StageDischargeRecord>();
+            InMemoryCsvFile<StageDischargeReadingRecord> csvFile = new InMemoryCsvFile<StageDischargeReadingRecord>();
             csvFile.AddRecord(CreateFullRecord(fixture));
             return csvFile.GetInMemoryCsvFileStream();
         }
 
-        public static StageDischargeRecord CreateFullRecord(IFixture fixture)
+        public static StageDischargeReadingRecord CreateFullRecord(IFixture fixture)
         {
             return StageDischargeRecordBuilder.Build()
                     .WithLocationIdentifier(fixture.Create<string>())

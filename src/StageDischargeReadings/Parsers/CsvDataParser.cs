@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using FileHelpers;
 using FileHelpers.Events;
-using StageDischargeReadingsPlugin.Helpers;
-using StageDischargeReadingsPlugin.Interfaces;
+using StageDischargeReadings.Helpers;
+using StageDischargeReadings.Interfaces;
 
-namespace StageDischargeReadingsPlugin.Parsers
+namespace StageDischargeReadings.Parsers
 {
     public class CsvDataParser<T> : IDataParser<T> where T : class, ISelfValidator
     {

@@ -3,13 +3,13 @@ using FieldDataPluginFramework.DataModel.ChannelMeasurements;
 using FieldDataPluginFramework.DataModel.DischargeActivities;
 using FieldDataPluginFramework.DataModel.Verticals;
 using FieldDataPluginFramework.Units;
-using StageDischargeReadingsPlugin.Parsers;
+using StageDischargeReadings.Parsers;
 
-namespace StageDischargeReadingsPlugin.Mappers
+namespace StageDischargeReadings.Mappers
 {
     internal class DischargeActivityMapper
     {
-        public DischargeActivity FromStageDischargeRecord(StageDischargeRecord record)
+        public DischargeActivity FromStageDischargeRecord(StageDischargeReadingRecord record)
         {
             var discharge = new Measurement(record.Discharge.GetValueOrDefault(), record.DischargeUnits);
             var dischargeInterval = new DateTimeInterval(record.MeasurementStartDateTime, record.MeasurementEndDateTime);
@@ -33,7 +33,7 @@ namespace StageDischargeReadingsPlugin.Mappers
             return activity;
         }
 
-        private static ChannelMeasurementBase CreateChannelMeasurementFromRecord(StageDischargeRecord record, DateTimeInterval dischargeInterval, Measurement discharge)
+        private static ChannelMeasurementBase CreateChannelMeasurementFromRecord(StageDischargeReadingRecord record, DateTimeInterval dischargeInterval, Measurement discharge)
         {
             var section = new ManualGaugingDischargeSectionFactory(CreateUnitSystem(record))
                 { DefaultChannelName = record.ChannelName }
@@ -56,7 +56,7 @@ namespace StageDischargeReadingsPlugin.Mappers
             return section;
         }
 
-        private static UnitSystem CreateUnitSystem(StageDischargeRecord record)
+        private static UnitSystem CreateUnitSystem(StageDischargeReadingRecord record)
         {
             return new UnitSystem
             {

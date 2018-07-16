@@ -2,7 +2,7 @@
 using FieldDataPluginFramework.Context;
 using Ploeh.AutoFixture;
 
-namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
+namespace StageDischargeReadings.UnitTests.Helpers
 {
     public static class LocationInfoHelper
     {

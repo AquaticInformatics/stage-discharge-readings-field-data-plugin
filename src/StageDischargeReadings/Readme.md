@@ -1,7 +1,22 @@
-﻿# Stage/Discharge Field Data Plugin
+﻿# Stage/Discharge/Readings Field Data Plugin
 
-The StageDischarge field data plugin is a customer-installable plugin for AQTS 2017.4+.
+The StageDischargeReadings field data plugin is a customer-installable plugin for AQTS 2017.4+.
 It parses CSV files and imports stage/discharge activities, and parameter readings.
+
+## Why use this plugin instead of the stock Stage/Discharge plugin?
+
+This plugin is generally more useful than the stock Stage/Discharge plugin, since most agencies wanting to import stage/discharge field visit values to build up rating curves will also have correlated readings like air or water temperature.
+
+As of AQTS 2018.2, field visit data imported from one plugin can't be merged into an existing visit, so if an agency wants to quickly import some field visit values without writing their own custom plugin, then this Stage/Discharge/Readings plugin is the most appropriate choice.
+
+## This plugin replaces the stock Stage/Discharge plugin. Default installation values won't work. Make sure you disable the stock plugin!
+
+- This plugin replaces the stock Stage/Discharge plugin which has shipped with AQTS 2017.4 and later.
+- This plugin can parse every CSV that the stock plugin can parse, but can also parse readings as well.
+- In order to use this new plugin functionality, you **must** use the [FieldDataPluginTool](https://github.com/AquaticInformatics/aquarius-field-data-framework/tree/master/src/FieldDataPluginTool) to either:
+   - Delete the stock Stage/Discharge plugin from your app server (recommended)
+   - Configure the Stage/Discharge/Readings plugin to run before the stock plugin (ie. give the Stage/Discharge/Readings plugin a smaller PluginPriority value)
+- If you just install the Stage/Discharge/Readings plugin with default values, it will be the last plugin to run and **will never parse any files** because the stock plugin will try to parse them first.
 
 ## CSV File format
 
@@ -76,8 +91,8 @@ There are up to 29 fields in each row.
 
 ## The `ReadingValue` column defines the presence/absence of a parameter reading
 
-- When the **ReadingValue** column is set to a value, the plugin will validate that the **Reading1Parameter** and **Reading1Units** columns are also set.
-- When the **ReadingValue** column is empty, the plugin will require the other 2 columns to be empty.
+- When the **ReadingValue** column is set to a value, the plugin will validate that the **ReadingParameter** and **ReadingUnits** columns are also set.
+- When the **ReadingValue** column is empty, the plugin will require the other 10 Reading-related columns to be empty.
 - When readings exist in a CSV row, the timestamp used for the imported reading will be the mid-point between the **MeasurementStartDateTime** and **MeasurementEndDateTime** values.
 - Only the first 3 reading fields (**ReadingParameter**, **ReadingUnits**, and **ReadingValue**) are required. The rest of the reading fields are optional.
 - 
@@ -107,18 +122,20 @@ See https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-an
 
 ## Example file
 
-This example file contains 4 measurements at two different locations.
+This example file contains 4 discharge measurements at two different locations.
 - Two of the measurements occur on different days in April 2016 at `LocationA`, and will create two separate field visits in AQTS.
 - Two of the measurements occur on the same day in May 2017 at `LocationB`, and will create a single visit containing both measurements.
+- The April 1 2016 measurement also includes air and water temperature readings.
 - The order of measurement rows in the CSV file does not matter. The parser will sort all the rows by location and time before creating any field visit records.
 
 ```
 # A comment line
 #
-# AQUARIUS Stage-Discharge CSV v1.0
+# AQUARIUS Stage-Discharge-Readings CSV v1.0
 #
-LocationIdentifier, MeasurementId, MeasurementStartDateTime,          MeasurementEndDateTime,            StageAtStart, StageAtEnd, StageUnits, Discharge, DischargeUnits, ChannelName, ChannelWidth, WidthUnits, ChannelArea, AreaUnits, ChannelVelocity, VelocityUnits, Party, Comments
-LocationA         , 46791        , 2016-04-01T00:00:00.0000000Z,      2016-04-01T02:00:00.0000000Z,      12.0,         12.5,       ft,         32.3,      ft^3/s,         Main,        ,             ft,         ,            ft^2,      ,                ft/s
+LocationIdentifier, MeasurementId, MeasurementStartDateTime,          MeasurementEndDateTime,            StageAtStart, StageAtEnd, StageUnits, Discharge, DischargeUnits, ChannelName, ChannelWidth, WidthUnits, ChannelArea, AreaUnits, ChannelVelocity, VelocityUnits, Party, Comments, ReadingParameter, ReadingUnits, ReadingValue, ReadingType, ReadingMethod, ReadingPublish, ReadingUncertainty, ReadingDeviceManufacturer, ReadingDeviceModel, ReadingDeviceSerialNumber, ReadingSublocation
+LocationA         , 46791        , 2016-04-01T00:00:00.0000000Z,      2016-04-01T02:00:00.0000000Z,      12.0,         12.5,       ft,         32.3,      ft^3/s,         Main,        ,             ft,         ,            ft^2,      ,                ft/s,          Brian, ,         TW,                degC,          18,         Routine,     ,              true,           14.5,               man,                       mode,               ser,                        sub
+LocationA         ,              , 2016-04-01T01:15:00.0000000Z,      2016-04-01T01:15:00.0000000Z,          ,             ,         ,             ,            ,             ,        ,               ,         ,                ,      ,                    ,          Dave,  Hot!,         TA,                degC,          44
                                                                                                     
 LocationB         ,              , 2017-05-01T03:00:00.0000000+04:00, 2017-05-01T04:00:00.0000000+04:00, 8.7,          8.6,        ft,         13.5,      ft^3/s,         Main,        ,             ft,         ,            ft^2,      ,                ft/s,          ,      "Bubbler hose was disturbed, so we remeasured"
 LocationB         , 852345       , 2017-05-01T05:00:00.0000000+04:00, 2017-05-01T06:00:00.0000000+04:00, 9.4,          9.4,        ft,         13.6,      ft^3/s,         Main,        ,             ft,         ,            ft^2,      ,                ft/s
@@ -132,6 +149,8 @@ The end result of importing this CSV file will be:
 LocationA
   Visit on April 1 2016
     Meas ID 46971  32.30 ft^3/s at 12.125 ft
+    Water temperature of 18 degC, at 1 AM (midpoint of discharge)
+    Air temperature of 44 degC, at 1:15 AM
   Visit on April 2 2016
     Meas ID 46972  132.3 ft^3/s at 12.275 ft
 LocationB
@@ -148,7 +167,8 @@ But all of that whitespace and comments is not needed.
 
 The following CSV text is identical in content to the above file, but with every optional bit of text removed:
 ```
-LocationA,46791,2016-04-01T00:00:00.0000000Z,2016-04-01T02:00:00.0000000Z,12.0,12.5,ft,32.3,ft^3/s,Main,,ft,,ft^2,,ft/s
+LocationA,46791,2016-04-01T00:00:00.0000000Z,2016-04-01T02:00:00.0000000Z,12.0,12.5,ft,32.3,ft^3/s,Main,,ft,,ft^2,,ft/s,Brian,,TW,degC,18,Routine,,true,14.5,man,mode,ser,sub
+LocationA,,2016-04-01T01:15:00.0000000Z,2016-04-01T01:15:00.0000000Z,,,,,,,,,,,,,Dave,Hot!,TA,degC,44
 LocationB,,2017-05-01T03:00:00.0000000+04:00,2017-05-01T04:00:00.0000000+04:00,8.7,8.6,ft,13.5,ft^3/s,Main,,ft,,ft^2,,ft/s,,"Bubbler hose was disturbed, so we remeasured"
 LocationB,852345,2017-05-01T05:00:00.0000000+04:00,2017-05-01T06:00:00.0000000+04:00,9.4,9.4,ft,13.6,ft^3/s,Main,,ft,,ft^2,,ft/s
 LocationA,46792,2016-04-02T03:00:00.0000000Z,2016-04-02T04:00:00.0000000Z,11.85,12.7,ft,132.3,ft^3/s,Main,23.4,ft,125.63,ft^2,85.2,ft/s,Doug,My oh my what a comment

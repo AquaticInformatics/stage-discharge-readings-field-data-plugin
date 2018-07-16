@@ -8,10 +8,10 @@ An AQTS field data plugin supporting stage discharge measurements and/or paramet
 
 - Download the latest release of the plugin [here](../../releases/latest)
 - Install it using the [FieldVisitPluginTool](https://github.com/AquaticInformatics/aquarius-field-data-framework/tree/master/src/FieldDataPluginTool)
-
+- Make sure you delete/disable the stock Stage/Discharge plugin, so that this new plugin can replace its functionality.
 ## Supported CSV format
 
-The format of the CSV files supported by this plugin is described [here](src/StageDischargeReadingsPlugin)
+The format of the CSV files supported by this plugin is described [here](src/StageDischargeReadings)
 
 ## Requirements for building the plugin from source
 
@@ -21,7 +21,7 @@ The format of the CSV files supported by this plugin is described [here](src/Sta
 ## Building the plugin
 
 - Load the `src\StageDischargeReadingsPlugin.sln` file in Visual Studio and build the `Release` configuration.
-- The `src\StageDischargeReadingsPlugin\deploy\Release\StageDischargeReadings.plugin` file can then be installed on your AQTS app server.
+- The `src\StageDischargeReadings\deploy\Release\StageDischargeReadings.plugin` file can then be installed on your AQTS app server.
 
 ## Testing the plugin within Visual Studio
 
@@ -33,7 +33,7 @@ Use the included `PluginTester.exe` tool from the `Aquarius.FieldDataFramework` 
 4. Enter the **Command line arguments:** to launch your plugin
 
 ```
-/Plugin=StageDischargeReadingsPlugin.dll /Json=AppendedResults.json /Data=..\..\..\..\data\StageDischargeWithReadings.csv
+/Plugin=StageDischargeReadings.dll /Json=AppendedResults.json /Data=..\..\..\..\data\StageDischargeWithReadings.csv
 ```
 
 The `/Plugin=` argument can be the filename of your plugin assembly, without any folder. The default working directory for a start action is the bin folder containing your plugin.
