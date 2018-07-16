@@ -77,9 +77,9 @@ namespace StageDischargeReadings.Parsers
         [FieldOrder(22), FieldTrim(TrimMode.Both), FieldOptional]
         public ReadingType? ReadingType;
         [FieldOrder(23), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
-        public string ReadingPublish;
-        [FieldOrder(24), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string ReadingMethod;
+        [FieldOrder(24), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
+        public string ReadingPublish;
         [FieldOrder(25), FieldTrim(TrimMode.Both), FieldOptional]
         public double? ReadingUncertainty;
         [FieldOrder(26), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
