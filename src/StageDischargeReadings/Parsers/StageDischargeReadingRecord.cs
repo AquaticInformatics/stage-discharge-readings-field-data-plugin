@@ -5,13 +5,13 @@ using FieldDataPluginFramework.DataModel;
 using FieldDataPluginFramework.DataModel.Readings;
 using FieldDataPluginFramework.Validation;
 using FileHelpers;
-using StageDischargeReadingsPlugin.Helpers;
-using StageDischargeReadingsPlugin.Interfaces;
+using StageDischargeReadings.Helpers;
+using StageDischargeReadings.Interfaces;
 
-namespace StageDischargeReadingsPlugin.Parsers
+namespace StageDischargeReadings.Parsers
 {
     [DelimitedRecord(CsvParserConstants.FieldDelimiter)]
-    public class StageDischargeRecord : ISelfValidator
+    public class StageDischargeReadingRecord : ISelfValidator
     {
         [FieldOrder(1), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
         public string LocationIdentifier;

@@ -13,13 +13,12 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers;
-using Server.Plugins.FieldVisit.StageDischarge.UnitTests.TestData;
-using StageDischargeReadingsPlugin;
-using StageDischargeReadingsPlugin.Interfaces;
-using StageDischargeReadingsPlugin.Parsers;
+using StageDischargeReadings.Interfaces;
+using StageDischargeReadings.Parsers;
+using StageDischargeReadings.UnitTests.Helpers;
+using StageDischargeReadings.UnitTests.TestData;
 
-namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
+namespace StageDischargeReadings.UnitTests
 {
     [TestFixture]
     public class StageDischargeParserTests
@@ -27,7 +26,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         private Fixture _fixture;
         private IFieldDataResultsAppender _mockAppender;
         private ILog _mockLogger;
-        private StageDischargePlugin _csvDataPlugin;
+        private StageDischargeReadingsPlugin _csvDataPlugin;
 
         [SetUp]
         public void BeforeTest()
@@ -37,7 +36,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
             SetupMockAppender();
 
             _mockLogger = Substitute.For<ILog>();
-            _csvDataPlugin = new StageDischargePlugin(new CsvDataParser<StageDischargeRecord>());
+            _csvDataPlugin = new StageDischargeReadingsPlugin(new CsvDataParser<StageDischargeReadingRecord>());
         }
 
         private void SetupMockAppender()
@@ -104,31 +103,31 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
 
         private Stream CreateValidCsvFileStream()
         {
-            StageDischargeRecord originalRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
+            StageDischargeReadingRecord originalRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
             return CreateMemoryStream(originalRecord);
         }
 
-        private Stream CreateMemoryStream(StageDischargeRecord originalRecord)
+        private Stream CreateMemoryStream(StageDischargeReadingRecord originalRecord)
         {
-            var csvFile = new InMemoryCsvFile<StageDischargeRecord>();
+            var csvFile = new InMemoryCsvFile<StageDischargeReadingRecord>();
             csvFile.AddRecord(originalRecord);
             return csvFile.GetInMemoryCsvFileStream();
         }
 
         private Stream CreateMinimalValidFileStream()
         {
-            StageDischargeRecord stageDischargeRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
-            stageDischargeRecord.ChannelWidth = null;
-            stageDischargeRecord.ChannelArea = null;
-            stageDischargeRecord.Party = null;
-            stageDischargeRecord.Comments = null;
-            return CreateMemoryStream(stageDischargeRecord);
+            StageDischargeReadingRecord stageDischargeReadingRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
+            stageDischargeReadingRecord.ChannelWidth = null;
+            stageDischargeReadingRecord.ChannelArea = null;
+            stageDischargeReadingRecord.Party = null;
+            stageDischargeReadingRecord.Comments = null;
+            return CreateMemoryStream(stageDischargeReadingRecord);
         }
 
         [Test]
         public void ParseFile_WithFiveValidRowsInCsvInputFile_ReadsAndSavesAndReturnsSuccess()
         {
-            var csvFile = new InMemoryCsvFile<StageDischargeRecord>();
+            var csvFile = new InMemoryCsvFile<StageDischargeReadingRecord>();
             PutNRecordsInCsvFile(5, ref csvFile);
 
             using (var stream = csvFile.GetInMemoryCsvFileStream())
@@ -150,11 +149,11 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
             }
     }
 
-        private void PutNRecordsInCsvFile(int recordCount, ref InMemoryCsvFile<StageDischargeRecord> csvFile)
+        private void PutNRecordsInCsvFile(int recordCount, ref InMemoryCsvFile<StageDischargeReadingRecord> csvFile)
         {
             for (var i = 0; i < recordCount; i++)
             {
-                StageDischargeRecord rRecord = _fixture.Build<StageDischargeRecord>()
+                StageDischargeReadingRecord rRecord = _fixture.Build<StageDischargeReadingRecord>()
                     .With(x => x.MeasurementStartDateTime, DateTime.Now.AddHours(i))
                     .With(x => x.MeasurementEndDateTime, DateTime.Now.AddHours(i * 2))
                     .Without(x => x.Readings)
@@ -199,32 +198,32 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         [Test]
         public void ParseFile_WithNoRecords_ReturnsError()
         {
-            var mockCsvDataParser = Substitute.For<IDataParser<StageDischargeRecord>>();
-            mockCsvDataParser.ParseInputData(Arg.Any<Stream>()).Returns((IEnumerable<StageDischargeRecord>)null);
-            var plugin = new StageDischargePlugin(mockCsvDataParser);
+            var mockCsvDataParser = Substitute.For<IDataParser<StageDischargeReadingRecord>>();
+            mockCsvDataParser.ParseInputData(Arg.Any<Stream>()).Returns((IEnumerable<StageDischargeReadingRecord>)null);
+            var plugin = new StageDischargeReadingsPlugin(mockCsvDataParser);
 
             using (var stream = new MemoryStream(Encoding.ASCII.GetBytes("Nothing to see here folks...")))
             {
                 var results = plugin.ParseFile(stream, _mockAppender, _mockLogger);
 
                 results.Status.Should().Be(ParseFileStatus.CannotParse);
-                results.ErrorMessage.Should().Contain(StageDischargePlugin.NoRecordsInInputFile);
+                results.ErrorMessage.Should().Contain(StageDischargeReadingsPlugin.NoRecordsInInputFile);
             }
         }
 
         [Test]
         public void ParseFile_WithSomeInvalidRecords_ReturnsError()
         {
-            var mockCsvDataParser = Substitute.For<IDataParser<StageDischargeRecord>>();
-            mockCsvDataParser.ParseInputData(Arg.Any<Stream>()).Returns(_fixture.Create<IEnumerable<StageDischargeRecord>>());
+            var mockCsvDataParser = Substitute.For<IDataParser<StageDischargeReadingRecord>>();
+            mockCsvDataParser.ParseInputData(Arg.Any<Stream>()).Returns(_fixture.Create<IEnumerable<StageDischargeReadingRecord>>());
             mockCsvDataParser.Errors.Returns(_fixture.CreateMany<string>().ToArray());
             mockCsvDataParser.ValidRecords.Returns(1);
-            var plugin = new StageDischargePlugin(mockCsvDataParser);
+            var plugin = new StageDischargeReadingsPlugin(mockCsvDataParser);
             using (var stream = new MemoryStream(Encoding.ASCII.GetBytes("Good and bad data")))
             {
                 var results = plugin.ParseFile(stream, _mockAppender, _mockLogger);
                 results.Status.Should().Be(ParseFileStatus.SuccessfullyParsedButDataInvalid);
-                results.ErrorMessage.Should().Contain(StageDischargePlugin.InputFileContainsInvalidRecords);
+                results.ErrorMessage.Should().Contain(StageDischargeReadingsPlugin.InputFileContainsInvalidRecords);
             }
         }
     }

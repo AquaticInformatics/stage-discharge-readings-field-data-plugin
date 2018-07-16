@@ -1,15 +1,15 @@
 ﻿using System;
-using StageDischargeReadingsPlugin.Parsers;
+using StageDischargeReadings.Parsers;
 
-namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
+namespace StageDischargeReadings.UnitTests.Helpers
 {
     internal class StageDischargeRecordBuilder
     {
-        private readonly StageDischargeRecord _stageDischargeRecord;
+        private readonly StageDischargeReadingRecord _stageDischargeReadingRecord;
 
         private StageDischargeRecordBuilder()
         {
-            _stageDischargeRecord = new StageDischargeRecord();
+            _stageDischargeReadingRecord = new StageDischargeReadingRecord();
         }
 
         public static StageDischargeRecordBuilder Build()
@@ -19,102 +19,102 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
 
         public StageDischargeRecordBuilder WithLocationIdentifier(string locationIdentifier)
         {
-            _stageDischargeRecord.LocationIdentifier = locationIdentifier;
+            _stageDischargeReadingRecord.LocationIdentifier = locationIdentifier;
             return this;
         }
 
         public StageDischargeRecordBuilder WithMeasurementId(string measurementId)
         {
-            _stageDischargeRecord.MeasurementId = measurementId;
+            _stageDischargeReadingRecord.MeasurementId = measurementId;
             return this;
         }
         public StageDischargeRecordBuilder WithMeasurementStartDateTime(DateTimeOffset measurementStartDateTime)
         {
-            _stageDischargeRecord.MeasurementStartDateTime = measurementStartDateTime;
+            _stageDischargeReadingRecord.MeasurementStartDateTime = measurementStartDateTime;
             return this;
         }
         public StageDischargeRecordBuilder WithMeasurementEndDateTime(DateTimeOffset measurementEndDateTime)
         {
-            _stageDischargeRecord.MeasurementEndDateTime = measurementEndDateTime;
+            _stageDischargeReadingRecord.MeasurementEndDateTime = measurementEndDateTime;
             return this;
         }
         public StageDischargeRecordBuilder WithStageAtStart(double stageAtStart)
         {
-            _stageDischargeRecord.StageAtStart = stageAtStart;
+            _stageDischargeReadingRecord.StageAtStart = stageAtStart;
             return this;
         }
         public StageDischargeRecordBuilder WithStageAtEnd(double stageAtEnd)
         {
-            _stageDischargeRecord.StageAtEnd = stageAtEnd;
+            _stageDischargeReadingRecord.StageAtEnd = stageAtEnd;
             return this;
         }
         public StageDischargeRecordBuilder WithStageUnits(string stageUnits)
         {
-            _stageDischargeRecord.StageUnits = stageUnits;
+            _stageDischargeReadingRecord.StageUnits = stageUnits;
             return this;
         }
         public StageDischargeRecordBuilder WithDischarge(double discharge)
         {
-            _stageDischargeRecord.Discharge = discharge;
+            _stageDischargeReadingRecord.Discharge = discharge;
             return this;
         }
         public StageDischargeRecordBuilder WithDischargeUnits(string dischargeUnits)
         {
-            _stageDischargeRecord.DischargeUnits = dischargeUnits;
+            _stageDischargeReadingRecord.DischargeUnits = dischargeUnits;
             return this;
         }
         public StageDischargeRecordBuilder WithChannelName(string channelName)
         {
-            _stageDischargeRecord.ChannelName = channelName;
+            _stageDischargeReadingRecord.ChannelName = channelName;
             return this;
         }
         public StageDischargeRecordBuilder WithChannelWidth(double channelWidth)
         {
-            _stageDischargeRecord.ChannelWidth = channelWidth;
+            _stageDischargeReadingRecord.ChannelWidth = channelWidth;
             return this;
         }
         public StageDischargeRecordBuilder WithWidthUnits(string widthUnits)
         {
-            _stageDischargeRecord.WidthUnits = widthUnits;
+            _stageDischargeReadingRecord.WidthUnits = widthUnits;
             return this;
         }
         public StageDischargeRecordBuilder WithChannelArea(double channelArea)
         {
-            _stageDischargeRecord.ChannelArea = channelArea;
+            _stageDischargeReadingRecord.ChannelArea = channelArea;
             return this;
         }
         public StageDischargeRecordBuilder WithAreaUnits(string areaUnits)
         {
-            _stageDischargeRecord.AreaUnits = areaUnits;
+            _stageDischargeReadingRecord.AreaUnits = areaUnits;
             return this;
         }
         public StageDischargeRecordBuilder WithChannelVelocity(double channelVelocity)
         {
-            _stageDischargeRecord.ChannelVelocity = channelVelocity;
+            _stageDischargeReadingRecord.ChannelVelocity = channelVelocity;
             return this;
         }
         public StageDischargeRecordBuilder WithVelocityUnits(string velocityUnits)
         {
-            _stageDischargeRecord.VelocityUnits = velocityUnits;
+            _stageDischargeReadingRecord.VelocityUnits = velocityUnits;
             return this;
         }
         public StageDischargeRecordBuilder WithParty(string party)
         {
-            _stageDischargeRecord.Party = party;
+            _stageDischargeReadingRecord.Party = party;
             return this;
         }
         public StageDischargeRecordBuilder WithComments(string comments)
         {
-            _stageDischargeRecord.Comments = comments;
+            _stageDischargeReadingRecord.Comments = comments;
             return this;
         }
 
-        public StageDischargeRecord ARecord()
+        public StageDischargeReadingRecord ARecord()
         {
             // todo: replace with a copy/clone of the internal record to
             // avoid situations where the builder is reused rather than 
             // reinitialized
-            return _stageDischargeRecord;
+            return _stageDischargeReadingRecord;
         }
     }
 }

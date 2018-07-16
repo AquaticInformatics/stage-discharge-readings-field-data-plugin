@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using FileHelpers;
 
-namespace StageDischargeReadingsPlugin.Helpers
+namespace StageDischargeReadings.Helpers
 {
     public class CsvDateTimeOffsetConverter : ConverterBase
     {

@@ -1,7 +1,6 @@
 ﻿using System;
-using static System.FormattableString;
 
-namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
+namespace StageDischargeReadings.UnitTests.Helpers
 {
     internal class DummyImportRecordBuilder : ITestRecord<DummyImportRecord>
     {
@@ -54,8 +53,8 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
 
         public DummyImportRecord AParametricRecord(int ordinal)
         {
-            return WithId(Invariant($"locID{ordinal}"))
-                    .WithString(Invariant($"loc{ordinal}"))
+            return WithId(FormattableString.Invariant($"locID{ordinal}"))
+                    .WithString(FormattableString.Invariant($"loc{ordinal}"))
                     .WithOrdinal(ordinal)
                     .WithDateTime(new DateTime())
                     .WithBool(true)

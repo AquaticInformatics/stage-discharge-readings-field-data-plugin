@@ -7,8 +7,8 @@
     <ProjectGuid>{7B7A1374-3C35-4691-B29E-B22FDABA30B2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StageDischargeReadingsPlugin</RootNamespace>
-    <AssemblyName>StageDischargeReadingsPlugin</AssemblyName>
+    <RootNamespace>StageDischargeReadings</RootNamespace>
+    <AssemblyName>StageDischargeReadings</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
@@ -53,8 +53,8 @@
     <Compile Include="Mappers\DischargeActivityMapper.cs" />
     <Compile Include="Parsers\CsvDataParser.cs" />
     <Compile Include="Interfaces\ISelfValidator.cs" />
-    <Compile Include="Parsers\StageDischargeRecord.cs" />
-    <Compile Include="StageDischargePlugin.cs" />
+    <Compile Include="Parsers\StageDischargeReadingRecord.cs" />
+    <Compile Include="StageDischargeReadingsPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

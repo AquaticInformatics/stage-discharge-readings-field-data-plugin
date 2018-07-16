@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
+namespace StageDischargeReadings.UnitTests.Helpers
 {
     public class PrivateConstructorHelper
     {

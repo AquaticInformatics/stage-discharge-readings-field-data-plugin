@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using FileHelpers;
-using StageDischargeReadingsPlugin.Interfaces;
+using StageDischargeReadings.Interfaces;
 
-namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
+namespace StageDischargeReadings.UnitTests.Helpers
 {
     internal class InMemoryCsvFile<TRecordType> where TRecordType : class, ISelfValidator
     {

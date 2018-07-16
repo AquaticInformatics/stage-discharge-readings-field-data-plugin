@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StageDischargeReadingsPlugin", "StageDischargeReadingsPlugin\StageDischargeReadingsPlugin.csproj", "{7B7A1374-3C35-4691-B29E-B22FDABA30B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StageDischargeReadings", "StageDischargeReadings\StageDischargeReadings.csproj", "{7B7A1374-3C35-4691-B29E-B22FDABA30B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StageDischargeReadingsPlugin.UnitTests", "StageDischargeReadingsPlugin.UnitTests\StageDischargeReadingsPlugin.UnitTests.csproj", "{84BE445E-9FB2-4D34-B7AD-6AB82903AF2B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StageDischargeReadings.UnitTests", "StageDischargeReadings.UnitTests\StageDischargeReadings.UnitTests.csproj", "{84BE445E-9FB2-4D34-B7AD-6AB82903AF2B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5CE6C521-EFB9-41B4-97C5-DEB1F5BCEE66}"
 	ProjectSection(SolutionItems) = preProject

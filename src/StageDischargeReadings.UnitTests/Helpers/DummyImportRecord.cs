@@ -1,10 +1,10 @@
 ﻿using System;
 using FieldDataPluginFramework.Validation;
 using FileHelpers;
-using StageDischargeReadingsPlugin.Helpers;
-using StageDischargeReadingsPlugin.Interfaces;
+using StageDischargeReadings.Helpers;
+using StageDischargeReadings.Interfaces;
 
-namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
+namespace StageDischargeReadings.UnitTests.Helpers
 {
     [DelimitedRecord(CsvParserConstants.FieldDelimiter)]
     public class DummyImportRecord : ISelfValidator

@@ -2,13 +2,13 @@
 using FluentAssertions;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.Plugins.FieldVisit.StageDischarge.UnitTests.TestData;
-using StageDischargeReadingsPlugin.Parsers;
+using StageDischargeReadings.Parsers;
+using StageDischargeReadings.UnitTests.TestData;
 
-namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
+namespace StageDischargeReadings.UnitTests
 {
     [TestFixture]
-    public class StageDischargeRecordTests
+    public class StageDischargeReadingRecordTests
     {
         private IFixture _fixture;
 
@@ -33,23 +33,23 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
             CheckExpectedExceptionAndMessageWhenSpecifiedFieldIsNull<ArgumentNullException>(stageDischargeRecord, propertyName);
         }
 
-        private void CheckExpectedExceptionAndMessageWhenSpecifiedFieldIsNull<E>(StageDischargeRecord stageDischargeRecord, string propertyName) where E : Exception
+        private void CheckExpectedExceptionAndMessageWhenSpecifiedFieldIsNull<E>(StageDischargeReadingRecord stageDischargeReadingRecord, string propertyName) where E : Exception
         {
 
-            SetValueToNull(ref stageDischargeRecord, propertyName);
+            SetValueToNull(ref stageDischargeReadingRecord, propertyName);
 
-            Action validationAction = () => stageDischargeRecord.Validate();
+            Action validationAction = () => stageDischargeReadingRecord.Validate();
             validationAction
                 .ShouldThrow<E>()
                 .And.Message.Should().Contain(propertyName);
         }
 
-        private void SetValueToNull(ref StageDischargeRecord stageDischargeRecord, string propertyName)
+        private void SetValueToNull(ref StageDischargeReadingRecord stageDischargeReadingRecord, string propertyName)
         {
-            var field = stageDischargeRecord.GetType().GetField(propertyName);
+            var field = stageDischargeReadingRecord.GetType().GetField(propertyName);
             if (field != null)
             {
-                field.SetValue(stageDischargeRecord, null);
+                field.SetValue(stageDischargeReadingRecord, null);
             }
         }
 
@@ -65,10 +65,10 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
             CheckNoExceptionWhenSpecifiedFieldIsNull(stageDischargeRecord, propertyName);
         }
 
-        private void CheckNoExceptionWhenSpecifiedFieldIsNull(StageDischargeRecord stageDischargeRecord, string propertyName)
+        private void CheckNoExceptionWhenSpecifiedFieldIsNull(StageDischargeReadingRecord stageDischargeReadingRecord, string propertyName)
         {
-            SetValueToNull(ref stageDischargeRecord, propertyName);
-            Action validationAction = () => stageDischargeRecord.Validate();
+            SetValueToNull(ref stageDischargeReadingRecord, propertyName);
+            Action validationAction = () => stageDischargeReadingRecord.Validate();
             validationAction.ShouldNotThrow();
         }
 
@@ -84,16 +84,16 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         [Test]
         public void StageDischargeRecord_SelfValidate_Timestamps()
         {
-            StageDischargeRecord stageDischargeRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
-            Action validationAction = () => stageDischargeRecord.Validate();
-            stageDischargeRecord.MeasurementStartDateTime = DateTimeOffset.Now;
-            stageDischargeRecord.MeasurementEndDateTime = stageDischargeRecord.MeasurementStartDateTime;
+            StageDischargeReadingRecord stageDischargeReadingRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
+            Action validationAction = () => stageDischargeReadingRecord.Validate();
+            stageDischargeReadingRecord.MeasurementStartDateTime = DateTimeOffset.Now;
+            stageDischargeReadingRecord.MeasurementEndDateTime = stageDischargeReadingRecord.MeasurementStartDateTime;
             validationAction.ShouldNotThrow();
 
-            stageDischargeRecord.MeasurementEndDateTime = DateTimeOffset.Now.AddDays(1);
+            stageDischargeReadingRecord.MeasurementEndDateTime = DateTimeOffset.Now.AddDays(1);
             validationAction.ShouldNotThrow();
 
-            stageDischargeRecord.MeasurementStartDateTime = DateTimeOffset.Now.AddDays(200);
+            stageDischargeReadingRecord.MeasurementStartDateTime = DateTimeOffset.Now.AddDays(200);
             validationAction.ShouldThrow<ArgumentException>().And.Message.Should().Contain("MeasurementStartDateTime");
         }
     }
