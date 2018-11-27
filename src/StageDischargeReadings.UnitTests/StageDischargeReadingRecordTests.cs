@@ -18,15 +18,12 @@ namespace StageDischargeReadings.UnitTests
             _fixture = new Fixture();
         }
 
-        [TestCase("LocationIdentifier")]
-        [TestCase("StageAtStart")]
-        [TestCase("StageAtEnd")]
-        [TestCase("StageUnits")]
-        [TestCase("DischargeUnits")]
-        [TestCase("ChannelName")]
-        [TestCase("WidthUnits")]
-        [TestCase("AreaUnits")]
-        [TestCase("VelocityUnits")]
+        [TestCase(nameof(StageDischargeReadingRecord.LocationIdentifier))]
+        [TestCase(nameof(StageDischargeReadingRecord.DischargeUnits))]
+        [TestCase(nameof(StageDischargeReadingRecord.ChannelName))]
+        [TestCase(nameof(StageDischargeReadingRecord.WidthUnits))]
+        [TestCase(nameof(StageDischargeReadingRecord.AreaUnits))]
+        [TestCase(nameof(StageDischargeReadingRecord.VelocityUnits))]
         public void StageDischargeRecord_SelfValidateWithNullPropertyValue_DetectsNull(string propertyName)
         {
             var stageDischargeRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
@@ -35,9 +32,13 @@ namespace StageDischargeReadings.UnitTests
 
         private void CheckExpectedExceptionAndMessageWhenSpecifiedFieldIsNull<E>(StageDischargeReadingRecord stageDischargeReadingRecord, string propertyName) where E : Exception
         {
-
             SetValueToNull(ref stageDischargeReadingRecord, propertyName);
 
+            CheckExpectedExceptionForProperty<E>(stageDischargeReadingRecord, propertyName);
+        }
+
+        private void CheckExpectedExceptionForProperty<E>(StageDischargeReadingRecord stageDischargeReadingRecord, string propertyName) where E : Exception
+        {
             Action validationAction = () => stageDischargeReadingRecord.Validate();
             validationAction
                 .ShouldThrow<E>()
@@ -53,12 +54,12 @@ namespace StageDischargeReadings.UnitTests
             }
         }
 
-        [TestCase("MeasurementId")]
-        [TestCase("ChannelWidth")]
-        [TestCase("ChannelArea")]
-        [TestCase("ChannelVelocity")]
-        [TestCase("Party")]
-        [TestCase("Comments")]
+        [TestCase(nameof(StageDischargeReadingRecord.MeasurementId))]
+        [TestCase(nameof(StageDischargeReadingRecord.ChannelWidth))]
+        [TestCase(nameof(StageDischargeReadingRecord.ChannelArea))]
+        [TestCase(nameof(StageDischargeReadingRecord.ChannelVelocity))]
+        [TestCase(nameof(StageDischargeReadingRecord.Party))]
+        [TestCase(nameof(StageDischargeReadingRecord.Comments))]
         public void StageDischargeRecord_SelfValidateWithNullableProperties_DoesNotThrow(string propertyName)
         {
             var stageDischargeRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
@@ -79,6 +80,28 @@ namespace StageDischargeReadings.UnitTests
             var stageDischargeRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
             Action noThrowAction = () => stageDischargeRecord.Validate();
             noThrowAction.ShouldNotThrow();
+        }
+
+        [Test]
+        public void StageDischargeRecord_SelfValidate_WithStageAtStartButNoStageUnits_DetectsNull()
+        {
+            var stageDischargeRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
+
+            stageDischargeRecord.StageUnits = null;
+            stageDischargeRecord.StageAtEnd = null;
+
+            CheckExpectedExceptionForProperty<ArgumentException>(stageDischargeRecord, nameof(stageDischargeRecord.StageAtStart));
+        }
+
+        [Test]
+        public void StageDischargeRecord_SelfValidate_WithStageAtEndButNoStageUnits_DetectsNull()
+        {
+            var stageDischargeRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
+
+            stageDischargeRecord.StageUnits = null;
+            stageDischargeRecord.StageAtStart = null;
+
+            CheckExpectedExceptionForProperty<ArgumentException>(stageDischargeRecord, nameof(stageDischargeRecord.StageAtEnd));
         }
 
         [Test]

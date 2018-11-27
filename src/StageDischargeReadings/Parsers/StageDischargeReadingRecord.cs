@@ -222,9 +222,12 @@ namespace StageDischargeReadings.Parsers
 
         private void ValidateDischargeValues()
         {
-            ValidationChecks.CannotBeNull(nameof(StageAtStart), StageAtStart);
-            ValidationChecks.CannotBeNull(nameof(StageAtEnd), StageAtEnd);
-            ValidationChecks.CannotBeNullOrEmpty(nameof(StageUnits), StageUnits);
+            if (string.IsNullOrEmpty(StageUnits))
+            {
+                ThrowIfNotNull(nameof(StageAtStart), StageAtStart);
+                ThrowIfNotNull(nameof(StageAtEnd), StageAtEnd);
+            }
+
             ValidationChecks.CannotBeNull(nameof(Discharge), Discharge);
             ValidationChecks.CannotBeNullOrEmpty(nameof(DischargeUnits), DischargeUnits);
             ValidationChecks.CannotBeNullOrEmpty(nameof(ChannelName), ChannelName);

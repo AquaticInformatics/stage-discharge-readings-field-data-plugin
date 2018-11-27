@@ -58,9 +58,9 @@ There are up to 29 fields in each row.
 | **MeasurementId** | string | Discharge | N | An optional measurement ID for a discharge value. Measurement IDs must be unique per location.|
 | **MeasurementStartDateTime** | DateTimeOffset | All | Y | The start time of the measurement. See the [Timestamps](#timestamps) section below for format details. |
 | **MeasurementEndDateTime** | DateTimeOffset | All | Y | The end time of the measurement, which cannot be earlier than the start time.|
-| **StageAtStart** | double | Discharge | Y | The stage value at the start of the measurement. |
-| **StageAtEnd** | double | Discharge | Y | The stage value at the end of the measurement. |
-| **StageUnits** | string | Discharge | Y | The units of the stage measurement. |
+| **StageAtStart** | double | Discharge | N | The stage value at the start of the measurement. |
+| **StageAtEnd** | double | Discharge | N | The stage value at the end of the measurement. |
+| **StageUnits** | string | Discharge | N | The units of the stage measurement. |
 | **Discharge** | double | Discharge | Y | The measured discharge flow. |
 | **DischargeUnits** | string | Discharge | Y | The units of the discharge measurement. |
 | **ChannelName** | string | Discharge | Y | The name of the channel in which the measurment was taken. |

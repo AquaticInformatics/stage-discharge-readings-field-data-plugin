@@ -20,8 +20,7 @@ namespace StageDischargeReadings.Mappers
                 Party = record.Party
             };
 
-            activity.GageHeightMeasurements.Add(new GageHeightMeasurement(new Measurement(record.StageAtStart.GetValueOrDefault(), record.StageUnits), record.MeasurementStartDateTime));
-            activity.GageHeightMeasurements.Add(new GageHeightMeasurement(new Measurement(record.StageAtEnd.GetValueOrDefault(), record.StageUnits), record.MeasurementEndDateTime));
+            AddGageHeightMeasurements(activity, record);
 
             var manualGaugingDischarge = CreateChannelMeasurementFromRecord(record, dischargeInterval, discharge);
 
@@ -31,6 +30,15 @@ namespace StageDischargeReadings.Mappers
             }
 
             return activity;
+        }
+
+        private void AddGageHeightMeasurements(DischargeActivity activity, StageDischargeReadingRecord record)
+        {
+            if (record.StageAtStart.HasValue)
+                activity.GageHeightMeasurements.Add(new GageHeightMeasurement(new Measurement(record.StageAtStart.GetValueOrDefault(), record.StageUnits), record.MeasurementStartDateTime));
+
+            if (record.StageAtEnd.HasValue)
+                activity.GageHeightMeasurements.Add(new GageHeightMeasurement(new Measurement(record.StageAtEnd.GetValueOrDefault(), record.StageUnits), record.MeasurementEndDateTime));
         }
 
         private static ChannelMeasurementBase CreateChannelMeasurementFromRecord(StageDischargeReadingRecord record, DateTimeInterval dischargeInterval, Measurement discharge)
