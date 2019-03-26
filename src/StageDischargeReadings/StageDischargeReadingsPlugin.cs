@@ -33,30 +33,35 @@ namespace StageDischargeReadings
 
         public ParseFileResult ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender, ILog logger)
         {
-            _fieldDataResultsAppender = fieldDataResultsAppender;
             _log = logger;
 
             try
             {
-                var parsedRecords = _parser.ParseInputData(fileStream);
-                if (parsedRecords == null)
+                using (var delayedAppender = new DelayedAppender(fieldDataResultsAppender))
                 {
-                    return ParseFileResult.CannotParse(NoRecordsInInputFile);
-                }
-                if (_parser.Errors.Any())
-                {
-                    if (_parser.ValidRecords > 0)
+                    _fieldDataResultsAppender = delayedAppender;
+
+                    var parsedRecords = _parser.ParseInputData(fileStream);
+                    if (parsedRecords == null)
                     {
-                        return ParseFileResult.SuccessfullyParsedButDataInvalid(
-                            $"{InputFileContainsInvalidRecords}: {_parser.Errors.Length} errors:\n{string.Join("\n", _parser.Errors.Take(3))}");
+                        return ParseFileResult.CannotParse(NoRecordsInInputFile);
                     }
 
-                    return ParseFileResult.CannotParse();
-                }
+                    if (_parser.Errors.Any())
+                    {
+                        if (_parser.ValidRecords > 0)
+                        {
+                            return ParseFileResult.SuccessfullyParsedButDataInvalid(
+                                $"{InputFileContainsInvalidRecords}: {_parser.Errors.Length} errors:\n{string.Join("\n", _parser.Errors.Take(3))}");
+                        }
 
-                _log.Info($"Parsed {_parser.ValidRecords} rows from input file.");
-                SaveRecords(parsedRecords);
-                return ParseFileResult.SuccessfullyParsedAndDataValid();
+                        return ParseFileResult.CannotParse();
+                    }
+
+                    _log.Info($"Parsed {_parser.ValidRecords} rows from input file.");
+                    SaveRecords(parsedRecords);
+                    return ParseFileResult.SuccessfullyParsedAndDataValid();
+                }
             }
             catch (Exception e)
             {

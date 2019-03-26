@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DelayedAppender.cs" />
     <Compile Include="Helpers\CsvDateTimeOffsetConverter.cs" />
     <Compile Include="Helpers\CsvParseConstants.cs" />
     <Compile Include="Interfaces\IDataParser.cs" />
