@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using FieldDataPluginFramework.Context;
 using FieldDataPluginFramework.DataModel;
+using FieldDataPluginFramework.DataModel.ControlConditions;
 using FieldDataPluginFramework.DataModel.CrossSection;
 using FieldDataPluginFramework.DataModel.DischargeActivities;
 using FieldDataPluginFramework.DataModel.LevelSurveys;
@@ -106,6 +107,11 @@ namespace StageDischargeReadings
         public void AddLevelSurvey(FieldVisitInfo fieldVisit, LevelSurvey levelSurvey)
         {
             fieldVisit.LevelSurveys.Add(levelSurvey);
+        }
+
+        public void AddControlCondition(FieldVisitInfo fieldVisit, ControlCondition controlCondition)
+        {
+            fieldVisit.ControlConditions.Add(controlCondition);
         }
     }
 }
