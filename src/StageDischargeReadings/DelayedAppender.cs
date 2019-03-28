@@ -5,6 +5,7 @@ using FieldDataPluginFramework.Context;
 using FieldDataPluginFramework.DataModel;
 using FieldDataPluginFramework.DataModel.CrossSection;
 using FieldDataPluginFramework.DataModel.DischargeActivities;
+using FieldDataPluginFramework.DataModel.LevelSurveys;
 using FieldDataPluginFramework.DataModel.Readings;
 using FieldDataPluginFramework.Results;
 
@@ -100,6 +101,11 @@ namespace StageDischargeReadings
         public void AddCrossSectionSurvey(FieldVisitInfo fieldVisit, CrossSectionSurvey crossSectionSurvey)
         {
             fieldVisit.CrossSectionSurveys.Add(crossSectionSurvey);
+        }
+
+        public void AddLevelSurvey(FieldVisitInfo fieldVisit, LevelSurvey levelSurvey)
+        {
+            fieldVisit.LevelSurveys.Add(levelSurvey);
         }
     }
 }
