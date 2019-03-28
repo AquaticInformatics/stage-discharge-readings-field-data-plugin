@@ -3,6 +3,14 @@
 The StageDischargeReadings field data plugin is a customer-installable plugin for AQTS 2017.4+.
 It parses CSV files and imports stage/discharge activities, and parameter readings.
 
+## Plugin Compatibility Matrix
+
+| AQTS Version | Latest compatible plugin Version |
+| --- | --- |
+| AQTS 2017.4 | [v1.0.24](../../../../releases/tag/v1.0.24) |
+| AQTS 2018.1 | [v18.1.1](../../../../releases/tag/v18.1.1) |
+| AQTS 2018.2+ | [v18.2.1](../../../../releases/tag/v18.2.1) |
+
 ## Why use this plugin instead of the stock Stage/Discharge plugin?
 
 This plugin is generally more useful than the stock Stage/Discharge plugin, since most agencies wanting to import stage/discharge field visit values to build up rating curves will also have correlated readings like air or water temperature.
