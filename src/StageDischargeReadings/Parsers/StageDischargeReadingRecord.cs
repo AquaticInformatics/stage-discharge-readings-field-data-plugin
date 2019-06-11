@@ -265,7 +265,7 @@ namespace StageDischargeReadings.Parsers
 
         private void ThrowIfNoDischargeOrReadings()
         {
-            if (Discharge.HasValue || Readings.Any()) return;
+            if (Discharge.HasValue || Readings.Any() || !string.IsNullOrWhiteSpace(Comments)) return;
 
             throw new ArgumentException($"Each row must contain at least one stage/discharge pair or at least one reading.");
         }

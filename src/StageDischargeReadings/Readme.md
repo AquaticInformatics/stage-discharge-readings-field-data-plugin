@@ -103,7 +103,16 @@ There are up to 29 fields in each row.
 - When the **ReadingValue** column is empty, the plugin will require the other 10 Reading-related columns to be empty.
 - When readings exist in a CSV row, the timestamp used for the imported reading will be the mid-point between the **MeasurementStartDateTime** and **MeasurementEndDateTime** values.
 - Only the first 3 reading fields (**ReadingParameter**, **ReadingUnits**, and **ReadingValue**) are required. The rest of the reading fields are optional.
-- 
+
+## Visit-summary-only records
+
+If you need to create a visit with no discharge activity or readings, you can do so by:
+- Setting the **LocationIdentifier** column
+- Setting the **MeasurementStartDateTime** and **MeasurementEndDateTime** columns
+- Setting one or both of the **Comments** and/or **Party** columns
+
+Rows with only a location ID, timestamp, and comment/party text will create a visit summary record.
+
 ## Reading Measuring Devices
 
 If a measuring device is specified for a reading, all 3 device fields (**ReadingDeviceManufacturer**, **ReadingDeviceModel**, and **ReadingDeviceSerialNumber**) must be specified.
