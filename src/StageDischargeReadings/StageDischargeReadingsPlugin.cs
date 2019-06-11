@@ -259,7 +259,11 @@ namespace StageDischargeReadings
 
         private static string MergeUniqueStrings(string separator, string[] values)
         {
-            return string.Join(separator, values.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct());
+            var distinctValues = values
+                .SelectMany(s => s.Split(new []{separator}, StringSplitOptions.RemoveEmptyEntries))
+                .Where(s => !string.IsNullOrWhiteSpace(s)).Distinct();
+
+            return string.Join(separator, distinctValues);
         }
 
         private static DateTimeInterval ExpandInterval(DateTimeInterval interval, DateTimeOffset startTime, DateTimeOffset endTime)
