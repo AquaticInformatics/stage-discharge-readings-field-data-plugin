@@ -18,7 +18,7 @@ namespace StageDischargeReadings
         public const string NoRecordsInInputFile = "No records found in input file.";
         public const string InputFileContainsInvalidRecords = "Input file contains invalid records.";
         private readonly IDataParser<StageDischargeReadingRecord> _parser;
-        private IFieldDataResultsAppender _fieldDataResultsAppender;
+        private DelayedAppender _fieldDataResultsAppender;
         private readonly DischargeActivityMapper _dischargeActivityMapper;
         private ILog _log;
 
