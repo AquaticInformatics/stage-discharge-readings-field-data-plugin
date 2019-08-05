@@ -7,9 +7,9 @@ It parses CSV files and imports stage/discharge activities, and parameter readin
 
 | AQTS Version | Latest compatible plugin Version |
 | --- | --- |
-| AQTS 2017.4 | [v1.0.24](../../../../releases/tag/v1.0.24) |
+| AQTS 2018.2+ | [v18.2.7](../../../../releases/tag/v18.2.7) |
 | AQTS 2018.1 | [v18.1.1](../../../../releases/tag/v18.1.1) |
-| AQTS 2018.2+ | [v18.2.1](../../../../releases/tag/v18.2.1) |
+| AQTS 2017.4 | [v1.0.24](../../../../releases/tag/v1.0.24) |
 
 ## Why use this plugin instead of the stock Stage/Discharge plugin?
 
