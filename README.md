@@ -1,5 +1,13 @@
 # stage-discharge-readings-field-data-plugin
 
+## The StageDischargeReadings plugin is now obsolete
+
+![Try the Tabular CSV plugin](https://i.imgflip.com/47f3ro.jpg)
+
+Please use the [Tabular CSV Plugin](https://github.com/AquaticInformatics/tabular-field-data-plugin#tabular-csv-field-data-plugin) instead, which can read CSVs intended for this plugin, plus many more.
+
+## Maintained for archive purposes only
+
 [![Build status](https://ci.appveyor.com/api/projects/status/kd35cx68832yqldy/branch/master?svg=true)](https://ci.appveyor.com/project/SystemsAdministrator/stage-discharge-readings-field-data-plugin/branch/master)
 
 An AQTS field data plugin supporting stage discharge measurements and/or parameter readings.
