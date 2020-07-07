@@ -6,6 +6,8 @@
 
 Please use the [Tabular CSV Plugin](https://github.com/AquaticInformatics/tabular-field-data-plugin#tabular-csv-field-data-plugin) instead, which can read CSVs intended for this plugin, plus many more.
 
+See [this example Tabular configuration](https://aquaticinformatics.github.io/tabular-field-data-plugin/test-drive/?example=StageDischargeReadingsFormat) which can parse the sample StageDischargeReadings CSV data.
+
 ## Maintained for archive purposes only
 
 [![Build status](https://ci.appveyor.com/api/projects/status/kd35cx68832yqldy/branch/master?svg=true)](https://ci.appveyor.com/project/SystemsAdministrator/stage-discharge-readings-field-data-plugin/branch/master)
