@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Ploeh.AutoFixture;
+using AutoFixture;
 using StageDischargeReadings.Parsers;
 using StageDischargeReadings.UnitTests.Helpers;
 

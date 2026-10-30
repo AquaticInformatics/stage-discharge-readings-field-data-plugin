@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using NUnit.Framework;
-using Ploeh.AutoFixture;
+using AutoFixture;
 using StageDischargeReadings.Parsers;
 using StageDischargeReadings.UnitTests.TestData;
 

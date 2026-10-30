@@ -11,7 +11,7 @@ namespace StageDischargeReadings.UnitTests
     {
 
         private CsvDateTimeOffsetConverter DateTimeConverter;
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             DateTimeConverter = new CsvDateTimeOffsetConverter();
