@@ -12,7 +12,7 @@ using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
-using Ploeh.AutoFixture;
+using AutoFixture;
 using StageDischargeReadings.Interfaces;
 using StageDischargeReadings.Parsers;
 using StageDischargeReadings.UnitTests.Helpers;

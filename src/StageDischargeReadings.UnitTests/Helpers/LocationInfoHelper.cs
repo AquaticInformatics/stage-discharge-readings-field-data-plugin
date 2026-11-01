@@ -1,6 +1,6 @@
 ﻿using System;
 using FieldDataPluginFramework.Context;
-using Ploeh.AutoFixture;
+using AutoFixture;
 
 namespace StageDischargeReadings.UnitTests.Helpers
 {
